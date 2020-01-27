@@ -1,0 +1,58 @@
+/* Copyright David Guzman. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+#ifndef TENSORFLOW_SERVING_SERVABLES_TENSORFLOW_TRAIN_UTIL_H_
+#define TENSORFLOW_SERVING_SERVABLES_TENSORFLOW_TRAIN_UTIL_H_
+
+#include "tensorflow/core/lib/core/status.h"
+#include "tensorflow/core/protobuf/config.pb.h"
+#include "tensorflow/core/protobuf/meta_graph.pb.h"
+#include "tensorflow/core/public/session.h"
+#include "tensorflow_serving/apis/train.pb.h"
+#include "tensorflow_serving/util/optional.h"
+
+namespace tensorflow {
+namespace serving {
+
+namespace internal {
+// Whether to serialize proto as field or content.
+enum class TrainResponseTensorSerializationOption {
+  kAsProtoField = 0,
+  kAsProtoContent = 1,
+};
+
+// Similar to RunTrain below, but allows specification of a serialization
+// option for the TensorProtos in the response.
+Status RunTrain(
+    const RunOptions& run_options, const MetaGraphDef& meta_graph_def,
+    const optional<int64>& servable_version,
+    const TrainResponseTensorSerializationOption tensor_serialization_option,
+    Session* session, const TrainRequest& request, TrainResponse* response);
+
+}  // namespace internal
+
+// Implementation of Train using the SavedModel SignatureDef format.
+//
+// IMPLEMENTATION NOTES: Calls the internal::RunTrain function above by
+// specifying serialization option as kAsProtoField for backward compatibility.
+Status RunTrain(const RunOptions& run_options,
+                  const MetaGraphDef& meta_graph_def,
+                  const optional<int64>& servable_version, Session* session,
+                  const TrainRequest& request, TrainResponse* response);
+
+}  // namespace serving
+}  // namespace tensorflow
+
+#endif  // TENSORFLOW_SERVING_SERVABLES_TENSORFLOW_TRAIN_UTIL_H_

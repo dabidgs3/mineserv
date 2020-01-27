@@ -24,13 +24,13 @@ TESTDATA="$(pwd)/serving/tensorflow_serving/servables/tensorflow/testdata"
 
 # Start TensorFlow Serving container and open the REST API port
 docker run -t --rm -p 8501:8501 \
-    -v "$TESTDATA/saved_model_half_plus_two_cpu:/models/half_plus_two" \
-    -e MODEL_NAME=half_plus_two \
+    -v "$TESTDATA/saved_model:/models/mine" \
+    -e MODEL_NAME=mine \
     tensorflow/serving &
 
 # Query the model using the predict API
 curl -d '{"mine": channel}' \
-    -X POST http://localhost:8501/v1/models/half_plus_two:predict
+    -X POST http://localhost:8501/v1/models/mine:mine
 
 # Returns => { "mine": [2.5, 3.0, 4.5] }
 ```
@@ -43,31 +43,9 @@ Refer to the official Tensorflow documentations site for [a complete tutorial to
 ## Documentation
 
 ### Set up
-
-The easiest and most straight-forward way of using TensorFlow Serving is with
-Docker images. We highly recommend this route unless you have specific needs
-that are not addressed by running in a container.
-
-*   [Install Tensorflow Serving using Docker](tensorflow_serving/g3doc/docker.md)
-    *(Recommended)*
-*   [Install Tensorflow Serving without Docker](tensorflow_serving/g3doc/setup.md)
-    *(Not Recommended)*
-*   [Build Tensorflow Serving from Source with Docker](tensorflow_serving/g3doc/building_with_docker.md)
-*   [Deploy Tensorflow Serving on Kubernetes](tensorflow_serving/g3doc/serving_kubernetes.md)
-
 ### Use
-
-
 
 #### Configure and Use
 ## Contribute
-
-
-**If you'd like to contribute to TensorFlow Serving, be sure to review the
-[contribution guidelines](CONTRIBUTING.md).**
-
-
 ## For more information
 
-Please refer to the official [TensorFlow website](http://tensorflow.org) for
-more information.

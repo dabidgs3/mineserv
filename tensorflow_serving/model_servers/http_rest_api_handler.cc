@@ -58,7 +58,7 @@ HttpRestApiHandler::HttpRestApiHandler(const RunOptions& run_options,
       predictor_(new TensorflowPredictor(true /* use_saved_model */)),
       trainer_(new TensorflowTrainer(true /* use_saved_model */)),
       prediction_api_regex_(
-          R"((?i)/v1/models/([^/:]+)(?:/versions/(\d+))?:(classify|regress|predict|train))"),
+          R"((?i)/v1/models/([^/:]+)(?:/versions/(\d+))?:(classify|regress|predict|mine))"),
       modelstatus_api_regex_(
           R"((?i)/v1/models(?:/([^/:]+))?(?:/versions/(\d+))?(?:\/(metadata))?)") {
 }
